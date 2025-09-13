@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - DATABASE_URL=jdbc:postgresql://db:5432/zenni_db
+      - DATABASE_USERNAME=zenni_user
+      - DATABASE_PASSWORD=zenni_password
+    depends_on:
+      - db
+    volumes:
+      - ./firebase-service-account.json:/app/firebase-service-account.json:ro
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=zenni_db
+      - POSTGRES_USER=zenni_user
+      - POSTGRES_PASSWORD=zenni_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

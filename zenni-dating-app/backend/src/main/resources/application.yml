@@ -1,0 +1,61 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: zenni-backend
+  
+  # Database Configuration
+  datasource:
+    url: jdbc:h2:mem:zenni_db
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+  
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+# Firebase Configuration
+firebase:
+  project-id: zenni-dating-app
+  service-account-key: classpath:firebase-service-account.json
+
+# JWT Configuration
+jwt:
+  secret: zenni-dating-app-secret-key-2024
+  expiration: 86400000 # 24 hours
+
+# CORS Configuration
+cors:
+  allowed-origins: 
+    - "http://localhost:3000"
+    - "http://localhost:8080"
+    - "https://zenni-dating-app.web.app"
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+
+# Logging
+logging:
+  level:
+    com.zenni.dating: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
