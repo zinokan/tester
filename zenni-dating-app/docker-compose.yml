@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # Backend Service
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - DATABASE_URL=jdbc:postgresql://db:5432/zenni_db
+      - DATABASE_USERNAME=zenni_user
+      - DATABASE_PASSWORD=zenni_password
+    depends_on:
+      - db
+    volumes:
+      - ./backend/firebase-service-account.json:/app/firebase-service-account.json:ro
+
+  # Frontend Service
+  frontend:
+    build: ./frontend/zenni_dating_app
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  # Database Service
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=zenni_db
+      - POSTGRES_USER=zenni_user
+      - POSTGRES_PASSWORD=zenni_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
